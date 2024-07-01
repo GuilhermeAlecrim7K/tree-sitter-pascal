@@ -245,6 +245,7 @@ function statements(trailing) {
 		[rn('_statement'),   $ => choice(
 			...semicolon,
 			seq($.assignment, ...semicolon),
+			seq($.varDef, ...semicolon),
 			alias($[rn('statement')], $.statement),
 			alias($[rn('if')],        $.if),
 			alias($[rn('ifElse')],    $.ifElse),
@@ -294,12 +295,12 @@ module.exports = grammar({
 	],
 	
 	rules: {
-		root:               $ => choice(
+		root:               $ => optional(choice(
 			$.program,
 			$.library,
 			$.unit,
 			$._definitions // For include files
-		),
+		)),
 
 		// HIGH LEVEL ----------------------------------------------------------
 
@@ -341,7 +342,7 @@ module.exports = grammar({
 		...statements(true),
 
 		assignment:      $ => op.infix(1,
-			$._expr,
+			choice($._expr, $.varAssignDef),
 			choice(
 				$.kAssign,
 				...enable_if(fpc,
@@ -350,11 +351,16 @@ module.exports = grammar({
 			),
 			$._expr
 		),
-
+		varAssignDef:          $ => seq($.kVar, $.identifier,
+			optional(seq(
+				':',
+				field('type', $.typeref)
+			))),
+		varDef:          $ => seq($.kVar, $.identifier, ':', field('type', $.typeref)),
 		label:           $ => seq($.identifier, ':'),
 		caseLabel:       $ => seq(delimited1(choice($._expr, $.range)), ':'),
 
-		_statements:     $ => repeat1(choice($._statement, $.label)),
+		_statements:     $ => repeat1(choice($.varDef, $._statement,  $.label)),
 		_statementsTr:   $ => seq(
 			repeat(choice($._statement, $.label)),
 			choice(tr($,'_statement'), $._statement)
