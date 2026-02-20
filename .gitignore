@@ -1,3 +1,13 @@
 node_modules
 build
 *.log
+
+# C artifacts
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.pc
+*.o
+*.obj
