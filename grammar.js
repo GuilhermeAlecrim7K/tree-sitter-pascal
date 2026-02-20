@@ -2,7 +2,7 @@
 
 // Support fpc's "public name" declaration hint, e.g.
 //     procedure foo; public name '_FOO';
-const public_name = true;
+const public_name = false;
 // Support extended RTTI attributes, e.g.
 //     [MyAttr(42)]
 //     procedure Foo;
@@ -10,11 +10,11 @@ const rtti        = true;
 // Support Delphi's anonymous procedures & functions.
 const lambda      = true;
 // Support fpc-specific features.
-const fpc         = true;
+const fpc         = false;
 // Support delphi-specific features.
 const delphi      = true;
 // Support FPC PasCocoa extensions (for objective c interopability)
-const objc        = true;
+const objc        = false;
 // Support generic types.
 const templates   = delphi || fpc;
 // Try to support preprocessor better.
